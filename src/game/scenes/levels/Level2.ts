@@ -1,19 +1,60 @@
-import { EventBus } from '../../EventBus';
+import { BaseLevel } from './BaseLevel';
 
-export class Level2 extends Phaser.Scene {
+const SPEED = 300;
+const ANG_SPEED = 90;
+
+export class Level2 extends BaseLevel {
+    ingredients: Phaser.Physics.Arcade.Group;
+    background: Phaser.GameObjects.TileSprite;
+    map: Phaser.Tilemaps.Tilemap;
+    gatheredIngredients: string[];
+    bees: Phaser.Physics.Arcade.Group;
+
     constructor() {
         super('Level2');
+        this.player = null;
+        this.cursors = null;
+        this.gatheredIngredients = [];
     }
 
     create() {
-        // Add your level 2 game objects and logic here
-        this.add.text(400, 300, 'Level 2', { fontSize: '32px', color: '#fff' });
+        this.cameras.main.setBackgroundColor('#24cad2');
+        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level2_background');
+        this.background.setOrigin(0, 0);
 
-        // Emit event to let React know this scene is ready
-        EventBus.emit('current-scene-ready', this);
+        this.player = this.physics.add.sprite(100, 450, 'player');
+        this.physics.world.setBounds(0, -1000, 1250, 1750);
+        this.player.setCollideWorldBounds(true);
+        this.player.setPosition(100, 450);
+
+        this.bees = this.physics.add.group()
+
+        this.bees.create(200, 200, 'orange')
+
+        this.bees.getChildren().forEach((bee) => {
+            if (bee instanceof Phaser.Physics.Arcade.Sprite) {
+                bee.setCollideWorldBounds(false);
+                bee.setGravity(0, -350)
+                bee.setAngularVelocity(ANG_SPEED)
+                bee.setMaxVelocity(SPEED)
+            }
+        });
+
+        this.setupPlayerCollision()
+
+        this.setupControls()
+
+        this.emitSceneReady()
     }
 
     update() {
-        // Add your level 2 update logic here
+        this.handlePlayerMovement();
+        this.bees.getChildren().forEach((bee) => {
+            if (bee instanceof Phaser.Physics.Arcade.Sprite) {
+                this.physics.velocityFromRotation(bee.rotation, SPEED, bee.body?.velocity);
+                this.physics.world.wrap(bee, 32);
+            }
+        });
     }
+
 } 

@@ -1,13 +1,10 @@
 import { EventBus } from '../../EventBus';
+import { BaseLevel } from './BaseLevel';
 
-export class Level1 extends Phaser.Scene {
-    player: Phaser.Physics.Arcade.Sprite | null;
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys | null;
-    canJump: boolean;
+export class Level1 extends BaseLevel {
     ingredients: Phaser.Physics.Arcade.Group;
     background: Phaser.GameObjects.TileSprite;
     map: Phaser.Tilemaps.Tilemap;
-    groundLayer: Phaser.Tilemaps.TilemapLayer;
     gatheredIngredients: string[];
 
 
@@ -62,17 +59,7 @@ export class Level1 extends Phaser.Scene {
             }
         });
 
-        this.physics.add.collider(this.player, this.groundLayer, (player, _) => {
-            if (player instanceof Phaser.Physics.Arcade.Sprite) {
-                if (player?.body?.blocked.down) {
-                    this.time.delayedCall(100, () => {
-                        this.canJump = true
-                    });
-
-                }
-            }
-        });
-
+        this.setupPlayerCollision()
         
         this.physics.add.collider(this.ingredients, this.groundLayer);
         
@@ -102,30 +89,13 @@ export class Level1 extends Phaser.Scene {
             }
         );
 
-        // Setup controls
-        this.cursors = this.input.keyboard?.createCursorKeys() || null;
+        this.setupControls()
 
-        // Emit event to let React know this scene is ready
-        EventBus.emit('current-scene-ready', this);
+        this.emitSceneReady()
     }
 
     update() {
-        if (!this.player || !this.cursors) return;
-
-        // Handle movement left right
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-180);
-        } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(180);
-        } else {
-            this.player.setVelocityX(0);
-        }
-
-        // Handle jumping
-        if (this.cursors.up.isDown && this.canJump) {
-            this.canJump = false;
-            this.player.setVelocityY(-330);
-        }
+        this.handlePlayerMovement()
 
         if (this.gatheredIngredients.length === 0) {
             const niceText = this.add.text(625, 375, 'Nice!', {
@@ -150,9 +120,9 @@ export class Level1 extends Phaser.Scene {
                 duration: 10000,
                 ease: 'Linear'
             });
-            // this.time.delayedCall(5000, () => {
-            //     this.scene.start('Level2');
-            // });
+            this.time.delayedCall(5000, () => {
+                this.scene.start('Level2');
+            });
         }
     }
 } 

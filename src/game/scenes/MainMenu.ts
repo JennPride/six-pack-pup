@@ -47,7 +47,8 @@ export class MainMenu extends Scene
             this.logoTween = null;
         }
 
-        this.scene.start('Level1'); 
+        // this.scene.start('Level1'); 
+        this.scene.start('Level2');
     }
 
 }
