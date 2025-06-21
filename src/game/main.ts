@@ -6,10 +6,7 @@ import { Preloader } from './scenes/Preloader';
 import { Success } from './scenes/Success';
 import { Level1 } from './scenes/levels/Level1';
 import { Level2 } from './scenes/levels/Level2';
-// Import other levels here
 
-//  Find out more information about the Game Config at:
-//  https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 const config: Phaser.Types.Core.GameConfig = {
     type: AUTO,
     width: 1250,
@@ -24,6 +21,14 @@ const config: Phaser.Types.Core.GameConfig = {
             debug: true
         }
     },
+    scale: {
+        mode: Phaser.Scale.FIT, 
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        min: {
+          width: 800,
+          height: 600
+        }
+      },
     scene: [
         Boot,
         Preloader,

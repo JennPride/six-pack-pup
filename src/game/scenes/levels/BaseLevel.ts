@@ -5,12 +5,49 @@ export abstract class BaseLevel extends Phaser.Scene {
     protected cursors: Phaser.Types.Input.Keyboard.CursorKeys | null;
     protected canJump: boolean;
     protected groundLayer: Phaser.Tilemaps.TilemapLayer;
+    protected hearts: number;
+    protected gatheredIngredients: string[]
+    protected ingredientPlaceholders: Phaser.GameObjects.Sprite[]
 
     constructor(sceneKey: string) {
         super(sceneKey);
         this.player = null;
         this.cursors = null;
         this.canJump = false;
+        this.hearts = 3;
+        this.gatheredIngredients = [];
+        this.ingredientPlaceholders = [];
+    }
+
+    protected renderGatheredIngredients() {
+        const backgroundRect = this.add.rectangle(10, 10, 200, 80, 0xffffff, 0.8).setOrigin(0, 0)
+        backgroundRect.setScrollFactor(0); 
+        backgroundRect.setDepth(999);
+        backgroundRect.setStrokeStyle(2, 0x000000);       
+    }
+
+    protected reduceHearts() {
+        if (this.hearts > 0) {
+            this.hearts--;
+            
+            if (this.player) {
+                this.tweens.add({
+                    targets: this.player,
+                    tint: 0xff0000,
+                    duration: 300,
+                    yoyo: true,
+                    repeat: 1,
+                    onComplete: () => {
+                        if (this.player) {
+                            this.player.clearTint();
+                        }
+                    }
+                });
+            }
+        }
+        if (this.hearts === 0) {
+            this.scene.start('GameOver');
+        }
     }
 
     protected handlePlayerMovement() {

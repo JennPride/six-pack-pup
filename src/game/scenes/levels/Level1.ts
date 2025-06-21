@@ -62,19 +62,27 @@ export class Level1 extends BaseLevel {
         this.setupPlayerCollision()
         
         this.physics.add.collider(this.ingredients, this.groundLayer);
-        
 
-        // Create text to display ingredients
-        const ingredientsText = this.add.text(25, 50, `Ingredients: ${this.gatheredIngredients.length}`, {
-            fontSize: '24px',
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 4
+        this.renderGatheredIngredients()
+        // Create ingredient icons for the UI
+        const ingredientIcons = [
+            { key: 'orange', x: 50, y: 50 },
+            { key: 'pineCone', x: 110, y: 50 },
+            { key: 'leaf', x: 170, y: 50 }
+        ];
+
+        ingredientIcons.forEach((icon) => {
+            // Create blacked out version (placeholder)
+            const placeholder = this.add.sprite(icon.x, icon.y, icon.key);
+            placeholder.setTint(0x000000);
+            placeholder.setScrollFactor(0);
+            placeholder.setDepth(999);
+            
+            if (!this.ingredientPlaceholders) {
+                this.ingredientPlaceholders = {};
+            }
+            this.ingredientPlaceholders[icon.key] = placeholder;
         });
-        ingredientsText.setScrollFactor(0); // Keep text fixed on screen
-        ingredientsText.setDepth(1000); // Set high depth to appear above everything
-        
-
 
         // Update ingredients count when collecting items
         this.physics.add.overlap(
@@ -83,8 +91,9 @@ export class Level1 extends BaseLevel {
             (_, obj2) => {
                 if (obj2 instanceof Phaser.Physics.Arcade.Sprite) {
                     obj2.disableBody(true, true);
+                    this.reduceHearts()
                     this.gatheredIngredients.push(obj2.texture.key);
-                    ingredientsText.setText(`Ingredients: ${this.gatheredIngredients.length}`);
+                    this.ingredientPlaceholders[obj2.texture.key].setTint(0xffffff)
                 }
             }
         );
@@ -97,7 +106,7 @@ export class Level1 extends BaseLevel {
     update() {
         this.handlePlayerMovement()
 
-        if (this.gatheredIngredients.length === 0) {
+        if (this.gatheredIngredients.length === 3) {
             const niceText = this.add.text(625, 375, 'Nice!', {
                 fontFamily: 'Knewave',
                 fontSize: 64,

@@ -18,8 +18,8 @@ export class Level2 extends BaseLevel {
     }
 
     create() {
-        this.cameras.main.setBackgroundColor('#24cad2');
-        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level2_background');
+        this.cameras.main.setBackgroundColor('#FFF');
+        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level2_background').setAlpha(0.7);
         this.background.setOrigin(0, 0);
 
         this.player = this.physics.add.sprite(100, 450, 'player');
