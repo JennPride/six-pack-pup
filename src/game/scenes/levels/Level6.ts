@@ -1,7 +1,6 @@
 import { BaseLevel } from './BaseLevel';
 
 export class Level6 extends BaseLevel {
-    ingredients: Phaser.Physics.Arcade.Group;
     background: Phaser.GameObjects.TileSprite;
     map: Phaser.Tilemaps.Tilemap;
     startPosition: { x: number, y: number };
@@ -9,7 +8,6 @@ export class Level6 extends BaseLevel {
 
     constructor() {
         super('Level6');
-        this.player = null;
         this.cursors = null;
     }
 
@@ -32,83 +30,17 @@ export class Level6 extends BaseLevel {
         }
 
         this.groundLayer = groundLayer;
-        
-        this.groundLayer.setCollisionBetween(0, 20)
-
-        this.ingredients = this.physics.add.group();
-        
-        this.setupPlayerAnimation();
         this.startPosition = { x: 600, y: 450 };
-        this.player = this.physics.add.sprite(this.startPosition.x, this.startPosition.y, 'moon1');
-        this.player.setScale(1.3)
-        
-        this.physics.world.setBounds(0, -1000, 1250, 1750);
-      
-        this.setupCamera();
-
-        this.ingredients = this.physics.add.group();
-
-        const ingredientPositions = [
-            { x: 200, y: 100, key: 'cherries' },
-            { x: 625, y: 100, key: 'honey' },
-            { x: 1050, y: 100, key: 'mistletoe' }
-        ];
-
-        ingredientPositions.forEach((pos) => {
-            const ingredient = this.ingredients.create(pos.x, pos.y, pos.key);
-            ingredient.body.setAllowGravity(false); // Disable gravity for floating ingredients
-
-            // Add a tween to make the ingredient float up and down
-            this.tweens.add({
-                targets: ingredient,
-                y: pos.y - 20, // Move up by 20 pixels
-                duration: 1000, // Duration of the tween
-                yoyo: true, // Reverse the tween to move back down
-                repeat: -1, // Repeat indefinitely
-                ease: 'Sine.easeInOut' // Smooth easing for the floating effect
-            });
-
-        });
-
-        const ingredientIcons = [
-            { key: 'cherries', x: 260, y: 175 },
-            { key: 'honey', x: 325, y: 175 },
-            { key: 'mistletoe', x: 390, y: 175 }
-        ];
-
-        ingredientIcons.forEach((icon) => {
-            // Create blacked out version (placeholder)
-            const placeholder = this.add.sprite(icon.x, icon.y, icon.key);
-            placeholder.setTint(0x000000);
-            placeholder.setScrollFactor(0);
-            placeholder.setDepth(999);
-            
-            if (!this.ingredientPlaceholders) {
-                this.ingredientPlaceholders = {};
+        this.setupLevel(
+            this.startPosition,
+            {
+                'cherries': { x: 200, y: 100 },
+                'honey': { x: 625, y: 100 },
+                'mistletoe': { x: 1050, y: 100 }
             }
-            this.ingredientPlaceholders[icon.key] = placeholder;
-        });
+        )
 
-        this.setupPlayerCollision()
-
-        this.setupControls()
-
-        // Update ingredients count when collecting items
-        this.physics.add.overlap(
-            this.player,
-            this.ingredients,
-            (_, obj2) => {
-                if (obj2 instanceof Phaser.Physics.Arcade.Sprite) {
-                    obj2.disableBody(true, true);
-                    this.gatheredIngredients.push(obj2.texture.key);
-                    this.ingredientPlaceholders[obj2.texture.key].setTint(0xffffff)
-                }
-            }
-        );
-
-        // Render the gathered ingredients UI last to ensure it's on top
-        this.renderGatheredIngredients()
-        this.player.setDrag(50, 0); 
+        this.player.setDrag(30, 0); 
 
         const fallingStars = this.physics.add.group();
 
@@ -142,16 +74,11 @@ export class Level6 extends BaseLevel {
             this.reduceHearts();
         });
 
-        this.renderLives()
-
-        this.emitSceneReady()
-
         // Add the chaser sprite
         this.spawnChaser();
 
         // Add collision between the chaser and the player
         this.physics.add.collider(this.player, this.chaser, () => {
-            console.log('Chaser hit the player!');
             this.reduceHearts(); // Reduce player's hearts on collision
 
             // Destroy the chaser and respawn it after 2 seconds
@@ -160,6 +87,8 @@ export class Level6 extends BaseLevel {
                 this.spawnChaser();
             });
         });
+
+        this.emitSceneReady()
     }
 
     spawnChaser() {
@@ -197,6 +126,10 @@ export class Level6 extends BaseLevel {
         // Make the chaser follow the player
         if (this.player && this.chaser && this.chaser.body) {
             this.physics.moveToObject(this.chaser, this.player, 100); // Adjust speed as needed
+        }
+
+        if (this.gatheredIngredients.length === 3) {
+            this.successNextScene('Success', 'level6can');
         }
     }
 

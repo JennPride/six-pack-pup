@@ -1,7 +1,7 @@
 import { EventBus } from '../../EventBus';
 
 export abstract class BaseLevel extends Phaser.Scene {
-    protected player: Phaser.Physics.Arcade.Sprite | null;
+    protected player: Phaser.Physics.Arcade.Sprite;
     protected cursors: Phaser.Types.Input.Keyboard.CursorKeys | null;
     protected canJump: boolean;
     protected groundLayer: Phaser.Tilemaps.TilemapLayer;
@@ -14,7 +14,6 @@ export abstract class BaseLevel extends Phaser.Scene {
 
     constructor(sceneKey: string) {
         super(sceneKey);
-        this.player = null;
         this.cursors = null;
         this.canJump = false;
         this.hearts = 3;

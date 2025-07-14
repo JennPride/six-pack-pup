@@ -1,7 +1,6 @@
 import { BaseLevel } from './BaseLevel';
 
 export class Level5 extends BaseLevel {
-    ingredients: Phaser.Physics.Arcade.Group;
     background: Phaser.GameObjects.TileSprite;
     map: Phaser.Tilemaps.Tilemap;
     clouds: Phaser.Physics.Arcade.Group;
@@ -10,7 +9,6 @@ export class Level5 extends BaseLevel {
 
     constructor() {
         super('Level5');
-        this.player = null;
         this.cursors = null;
         this.cloudCoords = [
             // Grouped clouds
@@ -54,67 +52,15 @@ export class Level5 extends BaseLevel {
 
         this.groundLayer = groundLayer;
         
-        this.groundLayer.setCollisionBetween(0,20)
+        this.setupLevel(
+            {x: 100, y: 450}, // Start position
+            {
+                'pumpkin': { x: 300, y: 200 },
+                'vanilla': { x: 700, y: 100 },
+                'cinnamon': { x: 1200, y: 400 }
+            },
+        )
 
-        this.ingredients = this.physics.add.group();
-        
-
-        this.setupPlayerAnimation();
-        this.player = this.physics.add.sprite(100, 450, 'moon1');
-        this.player.setScale(1.3)
-        
-        this.physics.world.setBounds(0, -1000, 1250, 1750);
-        this.player.setCollideWorldBounds(true);
-      
-        this.setupCamera();
-        this.player.setPosition(100, 450);
-
-        this.ingredients = this.physics.add.group();
-        // Create ingredients at specific positions with bounce enabled
-        const ingredientPositions = [
-            { x: 300, y: 200, key: 'pumpkin' },
-            { x: 700, y: 100, key: 'vanilla' },
-            { x: 1200, y: 400, key: 'cinnamon' }
-        ];
-
-        ingredientPositions.forEach((pos) => {
-            const ingredient = this.ingredients.create(pos.x, pos.y, pos.key);
-            ingredient.body.setAllowGravity(false); // Disable gravity for floating ingredients
-
-            // Add a tween to make the ingredient float up and down
-            this.tweens.add({
-                targets: ingredient,
-                y: pos.y - 20, // Move up by 20 pixels
-                duration: 1000, // Duration of the tween
-                yoyo: true, // Reverse the tween to move back down
-                repeat: -1, // Repeat indefinitely
-                ease: 'Sine.easeInOut' // Smooth easing for the floating effect
-            });
-
-        });
-
-        const ingredientIcons = [
-            { key: 'pumpkin', x: 260, y: 175 },
-            { key: 'vanilla', x: 325, y: 175 },
-            { key: 'cinnamon', x: 390, y: 175 }
-        ];
-
-        ingredientIcons.forEach((icon) => {
-            // Create blacked out version (placeholder)
-            const placeholder = this.add.sprite(icon.x, icon.y, icon.key);
-            placeholder.setTint(0x000000);
-            placeholder.setScrollFactor(0);
-            placeholder.setDepth(999);
-            
-            if (!this.ingredientPlaceholders) {
-                this.ingredientPlaceholders = {};
-            }
-            this.ingredientPlaceholders[icon.key] = placeholder;
-        });
-
-        this.setupPlayerCollision()
-
-        this.setupControls()
         this.clouds = this.physics.add.group();
 
         this.cloudCoords.forEach((coord) => {
@@ -161,22 +107,6 @@ export class Level5 extends BaseLevel {
             }
         });
 
-        // Update ingredients count when collecting items
-        this.physics.add.overlap(
-            this.player,
-            this.ingredients,
-            (_, obj2) => {
-                if (obj2 instanceof Phaser.Physics.Arcade.Sprite) {
-                    obj2.disableBody(true, true);
-                    this.gatheredIngredients.push(obj2.texture.key);
-                    this.ingredientPlaceholders[obj2.texture.key].setTint(0xffffff)
-                }
-            }
-        );
-
-        // Render the gathered ingredients UI last to ensure it's on top
-        this.renderGatheredIngredients()
-
     // Create a group for scarecrows
     this.scarecrows = this.physics.add.group();
 
@@ -188,49 +118,52 @@ export class Level5 extends BaseLevel {
     ];
 
     scarecrowPositions.forEach((pos) => {
-        const scarecrow = this.scarecrows.create(pos.x, pos.y, 'scarecrow');
-        scarecrow.setCollideWorldBounds(true);
-        scarecrow.setImmovable(true);
-        scarecrow.body.setAllowGravity(false);
+            const scarecrow = this.scarecrows.create(pos.x, pos.y, 'scarecrow');
+            scarecrow.setCollideWorldBounds(true);
+            scarecrow.setImmovable(true);
+            scarecrow.body.setAllowGravity(false);
 
-        // Horizontal float tween (left to right)
-        this.tweens.add({
-            targets: scarecrow,
-            x: pos.x + 200,
-            duration: 2000,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
+            // Horizontal float tween (left to right)
+            this.tweens.add({
+                targets: scarecrow,
+                x: pos.x + 200,
+                duration: 2000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
+
+            // Optional vertical bounce
+            this.tweens.add({
+                targets: scarecrow,
+                y: pos.y + 20,
+                duration: 200,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
         });
 
-        // Optional vertical bounce
-        this.tweens.add({
-            targets: scarecrow,
-            y: pos.y + 20,
-            duration: 200,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
+        this.physics.add.collider(this.player, this.scarecrows, () => {
+            this.player?.setPosition(100, 450);
+            this.reduceHearts(); 
         });
-    });
-
-    this.physics.add.collider(this.player, this.scarecrows, () => {
-        this.player?.setPosition(100, 450);
-        this.reduceHearts(); 
-    });
 
 
 
-    this.map.setTileIndexCallback(12, () => {
-        this.player?.setPosition(100, 450);
-        this.reduceHearts();
-    }, this, this.groundLayer);
+        this.map.setTileIndexCallback(12, () => {
+            this.player?.setPosition(100, 450);
+            this.reduceHearts();
+        }, this, this.groundLayer);
 
-    this.emitSceneReady()
+        this.emitSceneReady()
     }
 
     update() {
         this.handlePlayerMovement();
+        if (this.gatheredIngredients.length === 3) {
+            this.successNextScene('Level6', 'level5can');
+        }
     }
 
 }

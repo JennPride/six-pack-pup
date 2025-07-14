@@ -10,7 +10,30 @@ export class Success extends Phaser.Scene {
     create() {
         this.camera = this.cameras.main
 
-        const centerX = this.cameras.main.width / 2;
+        const screenWidth = this.cameras.main.width;
+
+        const centerX = screenWidth / 2;
+
+        const spacing = screenWidth / 6;
+
+        for (let i = 0; i < 6; i++) {
+            const x = spacing * i + spacing / 2;
+            const y = 100;
+            const img = this.add.image(x, y, `level${i+1}can`).setOrigin(0.5).setScale(0.2);
+
+            // Wobble animation: angle left and right
+            this.tweens.add({
+                targets: img,
+                angle: { from: -15, to: 15 },
+                duration: 600,
+                yoyo: true,
+                repeat: -1,
+                delay: i * 100, // stagger for a fun effect
+                ease: 'Sine.easeInOut'
+            });
+        }
+
+
         // Add success screen elements
         this.add.text(centerX, 300, 'Congratulations!', {
             fontFamily: 'VT323',
