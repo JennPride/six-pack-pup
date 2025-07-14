@@ -100,6 +100,8 @@ export class Level1 extends BaseLevel {
         // Render the gathered ingredients UI last to ensure it's on top
         this.renderGatheredIngredients()
 
+        this.renderLives()
+
         this.emitSceneReady()
     }
 
@@ -108,7 +110,7 @@ export class Level1 extends BaseLevel {
 
         if (this.gatheredIngredients.length === 3) {
             const niceText = this.add.text(625, 375, 'Nice!', {
-                fontFamily: 'Knewave',
+                fontFamily: 'Jersey 25',
                 fontSize: 64,
                 color: '#ffffff',
                 stroke: '#000000',

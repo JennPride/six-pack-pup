@@ -161,8 +161,8 @@ export class Level2 extends BaseLevel {
 
         this.setupControls()
 
-        // Render the gathered ingredients UI last to ensure it's on top
         this.renderGatheredIngredients()
+        this.renderLives()
 
         this.emitSceneReady()
     }

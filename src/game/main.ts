@@ -8,6 +8,8 @@ import { Level1 } from './scenes/levels/Level1';
 import { Level2 } from './scenes/levels/Level2';
 import { Level3 } from './scenes/levels/Level3';
 import { Level4 } from './scenes/levels/Level4';
+import { Level5 } from './scenes/levels/Level5';
+import { Level6 } from './scenes/levels/Level6';
 
 const config: Phaser.Types.Core.GameConfig = {
     type: AUTO,
@@ -34,6 +36,8 @@ const config: Phaser.Types.Core.GameConfig = {
         Level2,
         Level3,
         Level4,
+        Level5,
+        Level6,
         GameOver,
         Success
     ]

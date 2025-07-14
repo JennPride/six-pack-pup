@@ -20,13 +20,13 @@ export class GameOver extends Scene
         const centerX = this.cameras.main.width / 2;
         const centerY = this.cameras.main.height / 2;
         this.gameOverText = this.add.text(centerX, centerY, 'Game Over', {
-            fontFamily: 'Knewave', fontSize: 64, color: '#ffffff',
+            fontFamily: 'Jersey 25', fontSize: 64, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
         this.add.text(centerX, centerY + 100, 'Press Enter to Restart', {
-            fontFamily: 'Knewave', fontSize: 32, color: '#ffffff',
+            fontFamily: 'Jersey 25', fontSize: 32, color: '#ffffff',
             stroke: '#000000', strokeThickness: 4,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);

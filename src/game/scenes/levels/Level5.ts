@@ -1,31 +1,31 @@
 import { BaseLevel } from './BaseLevel';
 
-export class Level4 extends BaseLevel {
+export class Level5 extends BaseLevel {
     ingredients: Phaser.Physics.Arcade.Group;
     background: Phaser.GameObjects.TileSprite;
     map: Phaser.Tilemaps.Tilemap;
     clouds: Phaser.Physics.Arcade.Group;
     cloudCoords: { x: number, y: number }[];
-    staticCloud: Phaser.Physics.Arcade.Sprite | null;
 
     constructor() {
-        super('Level4');
+        super('Level5');
         this.player = null;
         this.cursors = null;
         this.cloudCoords = [
             // Groups of 3 on the lower side
             { x: 300, y: 600 },
+            { x: 350, y: 600 },
+            { x: 400, y: 600 },
             { x: 600, y: 600 },
             { x: 650, y: 600 },
             { x: 700, y: 600 },
+            { x: 900, y: 600 },
             { x: 950, y: 600 },
             { x: 1000, y: 600 },
             { x: 1200, y: 600 },
             { x: 1250, y: 600 },
 
             // Groups of 2 higher up
-            { x: 100, y: 470 },
-            { x: 150, y: 470 },
             { x: 400, y: 470 },
             { x: 450, y: 470 },
             { x: 700, y: 480 },
@@ -43,21 +43,40 @@ export class Level4 extends BaseLevel {
             { x: 900, y: 350 },
             { x: 1300, y: 200 }
         ];
-        this.staticCloud = null;
     }
 
     create() {
-        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level4_background').setAlpha(0.2);
+        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level5_background').setAlpha(0.2);
         this.background.setOrigin(0, 0);
 
+        this.map = this.make.tilemap({ key: 'level5_tilemap' });
+        
+        const levelTileset = this.map.addTilesetImage('spritemap', 'spritesheet');
+
+        if (!levelTileset) {
+            throw new Error('Failed to create level 5 tileset')
+        }
+
+        const groundLayer = this.map.createLayer('Ground Layer', levelTileset);
+
+        if (!groundLayer) {
+            throw new Error('Failed to create ground layer');
+        }
+
+        this.groundLayer = groundLayer;
+        
+        this.groundLayer.setCollisionBetween(5,5)
+
+
         this.ingredients = this.physics.add.group();
+        
 
         this.setupPlayerAnimation();
         this.player = this.physics.add.sprite(100, 450, 'moon1');
         this.player.setScale(1.3)
         
         this.physics.world.setBounds(0, -1000, 1250, 1750);
-        
+        this.player.setCollideWorldBounds(true);
       
         this.setupCamera();
         this.player.setPosition(100, 450);
@@ -65,9 +84,9 @@ export class Level4 extends BaseLevel {
         this.ingredients = this.physics.add.group();
         // Create ingredients at specific positions with bounce enabled
         const ingredientPositions = [
-            { x: 200, y: 200, key: 'star' },
-            { x: 600, y: 320, key: 'pineapple' },
-            { x: 1100, y: 100, key: 'grapefruit' }
+            { x: 300, y: 300, key: 'lime' },
+            { x: 700, y: 100, key: 'sunglasses' },
+            { x: 1200, y: 400, key: 'salt' }
         ];
 
         ingredientPositions.forEach((pos) => {
@@ -87,9 +106,9 @@ export class Level4 extends BaseLevel {
         });
 
         const ingredientIcons = [
-            { key: 'star', x: 260, y: 175 },
-            { key: 'pineapple', x: 325, y: 175 },
-            { key: 'grapefruit', x: 390, y: 175 }
+            { key: 'lime', x: 260, y: 175 },
+            { key: 'sunglasses', x: 325, y: 175 },
+            { key: 'salt', x: 390, y: 175 }
         ];
 
         ingredientIcons.forEach((icon) => {
@@ -106,6 +125,15 @@ export class Level4 extends BaseLevel {
         });
 
         this.setupPlayerCollision()
+
+        this.physics.add.overlap(this.player, this.groundLayer, (player, tile) => {
+            if (tile instanceof Phaser.Tilemaps.Tile && (tile.index === 4 || tile.index === 6)) {
+                this.reduceHearts();
+                if (player instanceof Phaser.Physics.Arcade.Sprite) {
+                    player.setPosition(500, 450)
+                }   
+            }
+        });
 
         this.setupControls()
         this.clouds = this.physics.add.group();
@@ -128,20 +156,6 @@ export class Level4 extends BaseLevel {
             }
         });
 
-        // Add a static cloud at the bottom of the screen
-        this.staticCloud = this.physics.add.sprite(100, 670, 'cloud'); 
-        if (this.staticCloud?.body instanceof Phaser.Physics.Arcade.Body) {
-            this.staticCloud.body.setAllowGravity(false); // Disable gravity for the static cloud
-            this.staticCloud.setImmovable(true); // Make the static cloud immovable
-        }
-
-        // Enable collision between the player and the static cloud
-        this.physics.add.collider(this.player, this.staticCloud, () => {
-            if (this.player?.body?.blocked.down) {
-                this.canJump = true; // Allow the player to jump again after landing on the static cloud
-            }
-        });
-
         // Update ingredients count when collecting items
         this.physics.add.overlap(
             this.player,
@@ -158,40 +172,6 @@ export class Level4 extends BaseLevel {
         // Render the gathered ingredients UI last to ensure it's on top
         this.renderGatheredIngredients()
 
-        // Group to manage falling stars
-        const fallingStars = this.physics.add.group();
-
-        // Timer to spawn stars periodically
-        this.time.addEvent({
-            delay: 1000, // Spawn a star every 1 second
-            loop: true,
-            callback: () => {
-                const x = Phaser.Math.Between(50, 1200); // Random x position within screen width
-                const star = fallingStars.create(x, 0, 'fallingstar'); // Create a star at the top of the screen
-                const velocity = Phaser.Math.Between(50, 200); // Random falling speed
-                const scale = Phaser.Math.FloatBetween(0.5, 1); // Random scale between 0.5 and 1.5
-                star.setScale(scale); // Set random scale
-                star.setVelocityY(velocity); // Set falling speed
-                star.body.setAllowGravity(false)
-                star.setCollideWorldBounds(false); // Allow the star to fall out of bounds
-            }
-        });
-
-        // Remove stars once they are out of view
-        this.physics.world.on('worldbounds', (body: Phaser.Physics.Arcade.Body) => {
-            if (fallingStars.contains(body.gameObject)) {
-                body.gameObject.destroy(); // Remove the star from the scene
-            }
-        });
-
-        // Enable collision between the player and falling stars
-        this.physics.add.overlap(this.player, fallingStars, (_, star) => {
-            if (star instanceof Phaser.Physics.Arcade.Sprite) {
-                star.destroy(); // Remove the star from the scene
-            }
-            this.reduceHearts(); // Reduce hearts if the player is hit by a star
-        });
-
         this.emitSceneReady()
     }
 
@@ -206,16 +186,6 @@ export class Level4 extends BaseLevel {
                 }
             }
         });
-
-
-        // Check if the player falls below the screen
-        if (this.player && this.player.y > this.physics.world.bounds.height) {
-            this.reduceHearts()
-            if (this.player instanceof Phaser.Physics.Arcade.Sprite) {
-                this.player.setPosition(100, 450);
-                this.canJump = true; 
-            }
-        }
     }
 
 }

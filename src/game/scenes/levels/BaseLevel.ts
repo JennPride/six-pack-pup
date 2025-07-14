@@ -8,6 +8,7 @@ export abstract class BaseLevel extends Phaser.Scene {
     protected hearts: number;
     protected gatheredIngredients: string[]
     protected ingredientPlaceholders: { [key: string]: Phaser.GameObjects.Sprite }
+    protected canGetHurt: boolean = true;
 
     constructor(sceneKey: string) {
         super(sceneKey);
@@ -19,6 +20,21 @@ export abstract class BaseLevel extends Phaser.Scene {
         this.ingredientPlaceholders = {};
     }
 
+    protected renderLives() {
+        const heartSpacing = 10;
+        const startX = 950;
+        let heartCount = this.hearts;
+        for (let i = 0; i < 3; i++) {
+            const heartX = startX + (i * (32 + heartSpacing));
+            const heartY = 150;
+            if (i < heartCount) {
+                this.add.image(heartX, heartY, 'fullheart').setScrollFactor(0);
+            } else {
+                this.add.image(heartX, heartY, 'emptyheart').setScrollFactor(0);
+            }
+        }
+    }
+
     protected renderGatheredIngredients() {
         const backgroundRect = this.add.rectangle(325, 175, 200, 75, 0xffffff, 1.0).setAlpha(0.5)
         backgroundRect.setScrollFactor(0);
@@ -28,17 +44,23 @@ export abstract class BaseLevel extends Phaser.Scene {
     }
 
     protected reduceHearts() {
+        if (!this.canGetHurt) return;
         if (this.hearts > 0) {
-            this.hearts--;
-            
-            if (this.player) {
-                this.player.setTintFill(0xff0000); // Make player solid red
-                this.time.delayedCall(500, () => {
-                    if (this.player) {
-                        this.player.clearTint(); // Revert to normal
-                    }
-                });
-            }
+            this.canGetHurt = false;
+            this.time.delayedCall(100, () => {
+                this.hearts--;
+                
+                if (this.player) {
+                    this.player.setTintFill(0xff0000); // Make player solid red
+                    this.time.delayedCall(500, () => {
+                        if (this.player) {
+                            this.player.clearTint(); // Revert to normal
+                        }
+                    });
+                }
+                this.renderLives();
+                this.canGetHurt = true;
+            })
         }
         if (this.hearts === 0) {
             this.scene.start('GameOver');

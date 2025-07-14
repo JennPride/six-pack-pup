@@ -3,7 +3,8 @@ body {
     padding: 0;
     color: rgba(255, 255, 255, 0.87);
     background-color: #000000; 
-    font-family: Knewave, Arial, Helvetica, sans-serif;
+    font-family: "VT323", monospace;
+    font-weight: 400;
 }
 
 #app {

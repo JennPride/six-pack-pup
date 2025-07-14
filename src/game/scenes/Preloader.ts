@@ -33,7 +33,7 @@ export class Preloader extends Scene
         this.load.image('level2_background', 'backgrounds/level2_bg.png');
         this.load.image('level3_background', 'backgrounds/level3_bg.png');
         this.load.image('level4_background', 'backgrounds/level4_bg.png');
-        // this.load.image('level5_background', 'backgrounds/level5_bg.png');
+        this.load.image('level5_background', 'backgrounds/level5_bg.png');
         this.load.image('level6_background', 'backgrounds/level6_bg.png');
 
         // Load maps
@@ -76,6 +76,8 @@ export class Preloader extends Scene
         this.load.image('moon5', 'moon/moon5.png');
         this.load.image('moon6', 'moon/moon6.png');
         this.load.image('moon7', 'moon/moon7.png');
+        this.load.image('fullheart', 'moon/fullheart.png');
+        this.load.image('emptyheart', 'moon/emptyheart.png');
     }
 
     create ()
@@ -85,6 +87,6 @@ export class Preloader extends Scene
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         // this.scene.start('MainMenu');
-        this.scene.start('Level4');
+        this.scene.start('Level3');
     }
 }
