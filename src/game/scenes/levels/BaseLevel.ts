@@ -161,8 +161,24 @@ export abstract class BaseLevel extends Phaser.Scene {
     ) {
         if (this.transitioningLevel) return;
         this.transitioningLevel = true;
-        const centerX = this.cameras.main.centerX;
-        const centerY = this.cameras.main.centerY;
+
+        const cam = this.cameras.main;
+        
+        const dimBg = this.add.rectangle(0, 0, cam.width, cam.height, 0x000000, 0.7)
+        .setOrigin(0)
+        .setScrollFactor(0)
+        .setDepth(0);
+
+        dimBg.setAlpha(0);
+        this.tweens.add({
+            targets: dimBg,
+            alpha: 0.5,
+            duration: 300,
+            ease: 'Linear'
+        });
+
+        const centerX = cam.centerX;
+        const centerY = cam.centerY;
         const can = this.add.image(centerX, -500, imgLabel).setOrigin(0.5, 0.5);
         can.setScrollFactor(0); // Ensure the image doesn't scroll with the camera 
         can.setScale(.5)
@@ -176,7 +192,7 @@ export abstract class BaseLevel extends Phaser.Scene {
             delay: 200, 
         });
 
-        this.time.delayedCall(6000, () => {
+        this.time.delayedCall(5000, () => {
             can.destroy(); // Remove the image after the animation
             this.transitioningLevel = false;
             this.scene.start(nextSceen);
@@ -188,9 +204,13 @@ export abstract class BaseLevel extends Phaser.Scene {
         ingredients: {
             [key: string]: { x: number, y: number }
         },
-        gravityForIngredients: boolean = false
+        gravityForIngredients: boolean = false,
+        setCollision: boolean = true,
     ) {
-        this.groundLayer.setCollisionBetween(0,20)
+        if (setCollision && this.groundLayer) {
+            this.groundLayer.setCollisionBetween(0,20)
+        }
+
         this.player = this.physics.add.sprite(startingLocation.x, startingLocation.y, 'moon1');
         this.player.setScale(1.3);
 
@@ -251,5 +271,16 @@ export abstract class BaseLevel extends Phaser.Scene {
         this.renderGatheredIngredients()
         this.renderLives()
 
+    }
+
+    protected handleOffScreenFall() {
+        // Check if the player falls below the screen
+        if (this.player && this.player.y > this.physics.world.bounds.height) {
+            this.reduceHearts()
+            if (this.player instanceof Phaser.Physics.Arcade.Sprite) {
+                this.player.setPosition(100, 450);
+                this.canJump = true; 
+            }
+        }
     }
 } 

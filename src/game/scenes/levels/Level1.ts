@@ -7,7 +7,6 @@ export class Level1 extends BaseLevel {
 
     constructor() {
         super('Level1');
-        this.player = null;
         this.cursors = null;
         this.canJump = false;
     }

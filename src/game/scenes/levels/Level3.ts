@@ -94,6 +94,15 @@ export class Level3 extends BaseLevel {
             }
         });
 
+        this.map.setTileIndexCallback(4, () => {
+            this.player?.setPosition(450, 600);
+            this.reduceHearts();
+        }, this, this.groundLayer);
+        this.map.setTileIndexCallback(6, () => {
+            this.player?.setPosition(450, 600);
+            this.reduceHearts();
+        }, this, this.groundLayer);
+
 
         this.emitSceneReady()
     }

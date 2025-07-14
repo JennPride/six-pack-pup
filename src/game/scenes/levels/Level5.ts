@@ -33,7 +33,7 @@ export class Level5 extends BaseLevel {
     }
 
     create() {
-        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level5_background').setAlpha(0.5);
+        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level5_background').setAlpha(0.3);
         this.background.setOrigin(0, 0);
 
         this.map = this.make.tilemap({ key: 'level5_tilemap' });
@@ -112,9 +112,9 @@ export class Level5 extends BaseLevel {
 
     const scarecrowPositions = [
         { x: 100, y: 300 },
-        { x: 600, y: 200 },
+        { x: 500, y: 200 },
         { x: 900, y: 400 },
-        { x: 500, y: 600 }
+        { x: 400, y: 600 }
     ];
 
     scarecrowPositions.forEach((pos) => {
@@ -161,7 +161,7 @@ export class Level5 extends BaseLevel {
 
     update() {
         this.handlePlayerMovement();
-        if (this.gatheredIngredients.length === 3) {
+        if (this.gatheredIngredients.length === 0) {
             this.successNextScene('Level6', 'level5can');
         }
     }
