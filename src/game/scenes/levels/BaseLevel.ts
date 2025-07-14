@@ -7,7 +7,7 @@ export abstract class BaseLevel extends Phaser.Scene {
     protected groundLayer: Phaser.Tilemaps.TilemapLayer;
     protected hearts: number;
     protected gatheredIngredients: string[]
-    protected ingredientPlaceholders: Phaser.GameObjects.Sprite[]
+    protected ingredientPlaceholders: { [key: string]: Phaser.GameObjects.Sprite }
 
     constructor(sceneKey: string) {
         super(sceneKey);
@@ -16,14 +16,15 @@ export abstract class BaseLevel extends Phaser.Scene {
         this.canJump = false;
         this.hearts = 3;
         this.gatheredIngredients = [];
-        this.ingredientPlaceholders = [];
+        this.ingredientPlaceholders = {};
     }
 
     protected renderGatheredIngredients() {
-        const backgroundRect = this.add.rectangle(10, 10, 200, 80, 0xffffff, 0.8).setOrigin(0, 0)
-        backgroundRect.setScrollFactor(0); 
-        backgroundRect.setDepth(999);
-        backgroundRect.setStrokeStyle(2, 0x000000);       
+        const backgroundRect = this.add.rectangle(325, 175, 200, 75, 0xffffff, 1.0).setAlpha(0.5)
+        backgroundRect.setScrollFactor(0);
+        backgroundRect.setRounded(5);
+        backgroundRect.setStrokeStyle(2, 0x000000);
+
     }
 
     protected reduceHearts() {
@@ -31,16 +32,10 @@ export abstract class BaseLevel extends Phaser.Scene {
             this.hearts--;
             
             if (this.player) {
-                this.tweens.add({
-                    targets: this.player,
-                    tint: 0xff0000,
-                    duration: 300,
-                    yoyo: true,
-                    repeat: 1,
-                    onComplete: () => {
-                        if (this.player) {
-                            this.player.clearTint();
-                        }
+                this.player.setTintFill(0xff0000); // Make player solid red
+                this.time.delayedCall(500, () => {
+                    if (this.player) {
+                        this.player.clearTint(); // Revert to normal
                     }
                 });
             }
@@ -50,22 +45,52 @@ export abstract class BaseLevel extends Phaser.Scene {
         }
     }
 
+    protected setupPlayerAnimation() {
+        this.anims.create({
+            key: 'moon_walk',
+            frames: [
+                { key: 'moon1' },
+                { key: 'moon2' },
+                { key: 'moon3' },
+                { key: 'moon4' },
+                { key: 'moon5' },
+                { key: 'moon6' },
+                { key: 'moon7' }
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+
     protected handlePlayerMovement() {
         if (!this.player || !this.cursors) return;
 
         // Handle movement left right
         if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-180);
+            this.player.setVelocityX(-200);
+            this.player.setFlipX(true);
+            if (this.canJump) {
+                this.player.play('moon_walk', true);
+            }
         } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(180);
+            this.player.setVelocityX(200);
+            this.player.setFlipX(false);
+            if (this.canJump) {
+                this.player.play('moon_walk', true);
+            }
         } else {
             this.player.setVelocityX(0);
+            this.player.setTexture('moon1');
+            this.player.anims.stop();
         }
 
         // Handle jumping
         if (this.cursors.up.isDown && this.canJump) {
             this.canJump = false;
-            this.player.setVelocityY(-330);
+            this.player.setVelocityY(-500);
+            this.player.setTexture('moon6');
+            this.player.anims.stop();
+            
         }
     }
 
@@ -81,6 +106,18 @@ export abstract class BaseLevel extends Phaser.Scene {
                 }
             }
         });
+    }
+
+    protected setupCamera() {
+        if (!this.player) return;
+        
+        // Set camera to follow the player
+        this.cameras.main.startFollow(this.player, true);
+        
+        // Set camera bounds to the world size (1250 x 750)
+        this.cameras.main.setBounds(0, 0, 1250, 750);
+
+        this.cameras.main.setZoom(1.4)
     }
 
     protected setupControls() {

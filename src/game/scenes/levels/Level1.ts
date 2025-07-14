@@ -1,11 +1,9 @@
-import { EventBus } from '../../EventBus';
 import { BaseLevel } from './BaseLevel';
 
 export class Level1 extends BaseLevel {
     ingredients: Phaser.Physics.Arcade.Group;
     background: Phaser.GameObjects.TileSprite;
     map: Phaser.Tilemaps.Tilemap;
-    gatheredIngredients: string[];
 
 
     constructor() {
@@ -13,7 +11,6 @@ export class Level1 extends BaseLevel {
         this.player = null;
         this.cursors = null;
         this.canJump = false;
-        this.gatheredIngredients = [];
     }
 
     create() {
@@ -23,7 +20,7 @@ export class Level1 extends BaseLevel {
         
         this.map = this.make.tilemap({ key: 'level1_tilemap' });
         
-        const levelTileset = this.map.addTilesetImage('Level1Tileset', 'level1_tileset');
+        const levelTileset = this.map.addTilesetImage('spritesheet', 'spritesheet');
 
         if (!levelTileset) {
             throw new Error('Failed to create level 1 tileset')
@@ -40,15 +37,16 @@ export class Level1 extends BaseLevel {
         this.groundLayer.setCollisionBetween(1,2)
 
         // Create player with physics
-        this.player = this.physics.add.sprite(100, 450, 'player');
-        this.physics.world.setBounds(0, -1000, 1250, 1750);
-        this.player.setCollideWorldBounds(true);
-        this.player.setPosition(100, 450);
+        this.player = this.physics.add.sprite(100, 600, 'moon1');
+        this.player.setScale(1.3)
+
+        // Setup camera to follow player
+        this.setupCamera();
 
         this.ingredients = this.physics.add.group();
         // Create ingredients at specific positions with bounce enabled
         this.ingredients.create(300, 0, 'orange');
-        this.ingredients.create(900, 0, 'pineCone');
+        this.ingredients.create(700, 0, 'pineCone');
         this.ingredients.create(1200, 0, 'leaf');
         
         // Enable bounce for all ingredients
@@ -59,16 +57,16 @@ export class Level1 extends BaseLevel {
             }
         });
 
-        this.setupPlayerCollision()
+        this.setupPlayerCollision();
+        this.setupPlayerAnimation();
         
         this.physics.add.collider(this.ingredients, this.groundLayer);
 
-        this.renderGatheredIngredients()
         // Create ingredient icons for the UI
         const ingredientIcons = [
-            { key: 'orange', x: 50, y: 50 },
-            { key: 'pineCone', x: 110, y: 50 },
-            { key: 'leaf', x: 170, y: 50 }
+            { key: 'orange', x: 260, y: 175 },
+            { key: 'pineCone', x: 325, y: 175 },
+            { key: 'leaf', x: 390, y: 175 }
         ];
 
         ingredientIcons.forEach((icon) => {
@@ -91,7 +89,6 @@ export class Level1 extends BaseLevel {
             (_, obj2) => {
                 if (obj2 instanceof Phaser.Physics.Arcade.Sprite) {
                     obj2.disableBody(true, true);
-                    this.reduceHearts()
                     this.gatheredIngredients.push(obj2.texture.key);
                     this.ingredientPlaceholders[obj2.texture.key].setTint(0xffffff)
                 }
@@ -99,6 +96,9 @@ export class Level1 extends BaseLevel {
         );
 
         this.setupControls()
+
+        // Render the gathered ingredients UI last to ensure it's on top
+        this.renderGatheredIngredients()
 
         this.emitSceneReady()
     }

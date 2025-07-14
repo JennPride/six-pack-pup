@@ -9,8 +9,6 @@ export class Preloader extends Scene
 
     init ()
     {
-        //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(512, 384, 'background');
 
         //  A simple progress bar. This is the outline of the bar.
         this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
@@ -29,18 +27,46 @@ export class Preloader extends Scene
 
     preload ()
     {
-        //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
-        this.load.image('level1_background', 'assets/level1_bg.png');
-        this.load.tilemapTiledJSON('level1_tilemap', 'assets/maps/level1.json');
-        this.load.image('level1_tileset', 'assets/maps/level1.png')
-        this.load.image('grass', 'assets/grass.png');
-        this.load.image('leafpile', 'assets/leafpile.png');
-        this.load.image('player', 'assets/player.png');
-        this.load.image('leaf', 'assets/leaf.png');
-        this.load.image('pineCone', 'assets/pineCone.png');
-        this.load.image('orange', 'assets/orange.png');
-        this.load.image('bush', 'assets/bush.png');
+        // Load backgrounds
+        this.load.image('level1_background', 'backgrounds/level1_bg.png');
+        this.load.image('level2_background', 'backgrounds/level2_bg.png');
+        this.load.image('level3_background', 'backgrounds/level3_bg.png');
+        this.load.image('level4_background', 'backgrounds/level4_bg.png');
+        // this.load.image('level5_background', 'backgrounds/level5_bg.png');
+        this.load.image('level6_background', 'backgrounds/level6_bg.png');
+
+        // Load maps
+        this.load.tilemapTiledJSON('level1_tilemap', 'maps/level1map.json');
+        this.load.tilemapTiledJSON('level2_tilemap', 'maps/level2map.json');
+        this.load.tilemapTiledJSON('level3_tilemap', 'maps/level3map.json');
+        // Level 4 doesn't need a map because all tiles are dynamic
+        this.load.tilemapTiledJSON('level5_tilemap', 'maps/level5map.json');
+        this.load.tilemapTiledJSON('level6_tilemap', 'maps/level6map.json');
+
+        // Load spritesheet
+        this.load.image('spritesheet', 'maps/art_of_troegs_spritesheet.png')
+
+        // Load ingredients
+        this.load.image('leaf', 'ingredients/level1/leaf.png');
+        this.load.image('pineCone', 'ingredients/level1/pineCone.png');
+        this.load.image('orange', 'ingredients/level1/orange.png');
+        this.load.image('magnifyingglass', 'ingredients/level2/magnifyingglass.png');
+        this.load.image('melon', 'ingredients/level2/melon.png');
+        this.load.image('pear', 'ingredients/level2/pear.png');
+
+        // Load enemies
+        this.load.image('bee1', 'enemies/bee1.png');
+        this.load.image('bee2', 'enemies/bee2.png');
+
+        // Load Moon sprites and animations
+        this.load.image('moon1', 'moon/moon1.png');
+        this.load.image('moon2', 'moon/moon2.png');
+        this.load.image('moon3', 'moon/moon3.png');
+        this.load.image('moon4', 'moon/moon4.png');
+        this.load.image('moon5', 'moon/moon5.png');
+        this.load.image('moon6', 'moon/moon6.png');
+        this.load.image('moon7', 'moon/moon7.png');
     }
 
     create ()
@@ -49,6 +75,7 @@ export class Preloader extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('MainMenu');
+        // this.scene.start('MainMenu');
+        this.scene.start('Level3');
     }
 }

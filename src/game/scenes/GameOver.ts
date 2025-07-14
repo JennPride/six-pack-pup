@@ -17,14 +17,24 @@ export class GameOver extends Scene
         this.camera = this.cameras.main
         this.camera.setBackgroundColor(0xff0000);
 
-        this.background = this.add.image(512, 384, 'background');
-        this.background.setAlpha(0.5);
-
-        this.gameOverText = this.add.text(512, 384, 'Game Over', {
+        const centerX = this.cameras.main.width / 2;
+        const centerY = this.cameras.main.height / 2;
+        this.gameOverText = this.add.text(centerX, centerY, 'Game Over', {
             fontFamily: 'Knewave', fontSize: 64, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
+
+        this.add.text(centerX, centerY + 100, 'Press Enter to Restart', {
+            fontFamily: 'Knewave', fontSize: 32, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 4,
+            align: 'center'
+        }).setOrigin(0.5).setDepth(100);
+
+        const enterKey = this.input.keyboard?.addKey('ENTER');
+        enterKey?.on('down', () => {
+            this.changeScene();
+        });
         
         EventBus.emit('current-scene-ready', this);
     }

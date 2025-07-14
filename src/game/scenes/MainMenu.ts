@@ -16,7 +16,7 @@ export class MainMenu extends Scene
     create ()
     {
 
-        this.startText = this.add.text(625, 500, 'Play Game', {
+        this.startText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'Play Game', {
             fontFamily: 'Knewave',
             fontSize: 64,
             color: '#ffffff',
@@ -48,7 +48,6 @@ export class MainMenu extends Scene
         }
 
         this.scene.start('Level1'); 
-        // this.scene.start('Level2');
     }
 
 }

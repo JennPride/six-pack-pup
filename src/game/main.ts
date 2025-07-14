@@ -6,28 +6,24 @@ import { Preloader } from './scenes/Preloader';
 import { Success } from './scenes/Success';
 import { Level1 } from './scenes/levels/Level1';
 import { Level2 } from './scenes/levels/Level2';
+import { Level3 } from './scenes/levels/Level3';
 
 const config: Phaser.Types.Core.GameConfig = {
     type: AUTO,
     width: 1250,
     height: 750,
     parent: 'game-container',
-    backgroundColor: '#028af8',
     pixelArt: true,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { x: 0, y: 350 },
+            gravity: { x: 0, y: 1000 },
             debug: true
         }
     },
     scale: {
         mode: Phaser.Scale.FIT, 
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        min: {
-          width: 800,
-          height: 600
-        }
       },
     scene: [
         Boot,
@@ -35,6 +31,7 @@ const config: Phaser.Types.Core.GameConfig = {
         MainMenu,
         Level1,
         Level2,
+        Level3,
         // Add other levels here
         GameOver,
         Success
