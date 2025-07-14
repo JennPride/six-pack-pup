@@ -34,7 +34,7 @@ export class Level1 extends BaseLevel {
         this.groundLayer = groundLayer;
 
         this.setupLevel(
-            {x: 600, y: 450}, // Start position
+            {x: 100, y: 450}, // Start position
             {
                 'orange': { x: 300, y: 0 },
                 'pineCone': { x: 700, y: 0 },

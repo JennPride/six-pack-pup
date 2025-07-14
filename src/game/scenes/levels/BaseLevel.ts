@@ -166,18 +166,18 @@ export abstract class BaseLevel extends Phaser.Scene {
         const centerY = this.cameras.main.centerY;
         const can = this.add.image(centerX, -500, imgLabel).setOrigin(0.5, 0.5);
         can.setScrollFactor(0); // Ensure the image doesn't scroll with the camera 
-        can.setScale(.7)
+        can.setScale(.5)
 
         // Bounce it up into view
         this.tweens.add({
             targets: can,
             y: centerY, // Final y position on screen
             ease: 'Bounce.easeOut', // Makes it bounce
-            duration: 3000, // Time in ms
-            delay: 200, // Optional: small delay before animation starts
+            duration: 3000, 
+            delay: 200, 
         });
 
-        this.time.delayedCall(5000, () => {
+        this.time.delayedCall(6000, () => {
             can.destroy(); // Remove the image after the animation
             this.transitioningLevel = false;
             this.scene.start(nextSceen);
