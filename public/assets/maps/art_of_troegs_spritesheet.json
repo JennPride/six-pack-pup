@@ -1,0 +1,148 @@
+{ "compressionlevel":-1,
+ "height":20,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[2, 3, 1, 4, 5, 12, 7, 8, 9, 10, 11, 13, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":20,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":30,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.2",
+ "tileheight":50,
+ "tilesets":[
+        {
+         "columns":0,
+         "firstgid":1,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"art_of_troegs",
+         "spacing":0,
+         "tilecount":14,
+         "tileheight":50,
+         "tiles":[
+                {
+                 "id":0,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (2)\/flower.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":1,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (1)\/grass.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":2,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (1)\/leafpile.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":3,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (5)\/ocean.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":4,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (5)\/sand.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":6,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (6)\/iceedgeleft.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":7,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (6)\/iceledge.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":8,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (6)\/iceledgeright.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":9,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (6)\/snowground.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":10,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (6)\/spooky_grass.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":11,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/oceanedge.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":12,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/rottenpumpkin.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":13,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (11)\/icefloorleft.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }, 
+                {
+                 "id":14,
+                 "image":"..\/..\/..\/..\/..\/..\/Downloads\/game (11)\/icefloorright.png",
+                 "imageheight":50,
+                 "imagewidth":50
+                }],
+         "tilewidth":50
+        }],
+ "tilewidth":50,
+ "type":"map",
+ "version":"1.10",
+ "width":30
+}

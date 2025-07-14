@@ -84,7 +84,7 @@ export abstract class BaseLevel extends Phaser.Scene {
         });
     }
 
-    protected handlePlayerMovement() {
+    protected handlePlayerMovement(slippery=false) {
         if (!this.player || !this.cursors) return;
 
         // Handle movement left right
@@ -101,7 +101,9 @@ export abstract class BaseLevel extends Phaser.Scene {
                 this.player.play('moon_walk', true);
             }
         } else {
-            this.player.setVelocityX(0);
+            if (!slippery) {
+                this.player.setVelocityX(0);
+            }
             this.player.setTexture('moon1');
             this.player.anims.stop();
         }

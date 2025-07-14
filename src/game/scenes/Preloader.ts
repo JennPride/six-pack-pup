@@ -66,12 +66,16 @@ export class Preloader extends Scene
         this.load.image('pumpkin', 'ingredients/level5/pumpkin.png');
         this.load.image('vanilla', 'ingredients/level5/vanilla.png');
         this.load.image('cinnamon', 'ingredients/level5/cinnamon.png');
+        this.load.image('cherries', 'ingredients/level6/cherries.png');
+        this.load.image('mistletoe', 'ingredients/level6/mistletoe.png');
+        this.load.image('honey', 'ingredients/level6/honey.png');
 
         // Load enemies
         this.load.image('bee1', 'enemies/bee1.png');
         this.load.image('bee2', 'enemies/bee2.png');
         this.load.image('fallingstar', 'enemies/fallingstar.png');
         this.load.image('scarecrow', 'enemies/scarecrow.png');
+        this.load.image('madelf', 'enemies/madelf.png');
 
         // Load Moon sprites and animations
         this.load.image('moon1', 'moon/moon1.png');
@@ -92,6 +96,6 @@ export class Preloader extends Scene
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         // this.scene.start('MainMenu');
-        this.scene.start('Level5');
+        this.scene.start('Level6');
     }
 }
