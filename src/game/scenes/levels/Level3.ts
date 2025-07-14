@@ -129,7 +129,6 @@ export class Level3 extends BaseLevel {
 
         this.physics.add.overlap(this.player, this.groundLayer, (player, tile) => {
             if (tile instanceof Phaser.Tilemaps.Tile && (tile.index === 4 || tile.index === 6)) {
-                console.log('Collision with tile');
                 if (player instanceof Phaser.Physics.Arcade.Sprite) {
                     player.setPosition(500, 650)
                 }   

@@ -6,47 +6,36 @@ export class Level5 extends BaseLevel {
     map: Phaser.Tilemaps.Tilemap;
     clouds: Phaser.Physics.Arcade.Group;
     cloudCoords: { x: number, y: number }[];
+    scarecrows: Phaser.Physics.Arcade.Group;
 
     constructor() {
         super('Level5');
         this.player = null;
         this.cursors = null;
         this.cloudCoords = [
-            // Groups of 3 on the lower side
-            { x: 300, y: 600 },
-            { x: 350, y: 600 },
-            { x: 400, y: 600 },
-            { x: 600, y: 600 },
-            { x: 650, y: 600 },
-            { x: 700, y: 600 },
-            { x: 900, y: 600 },
-            { x: 950, y: 600 },
-            { x: 1000, y: 600 },
-            { x: 1200, y: 600 },
-            { x: 1250, y: 600 },
+            // Grouped clouds
+            { x: 200, y: 600 },
+            { x: 250, y: 600 },
 
-            // Groups of 2 higher up
-            { x: 400, y: 470 },
-            { x: 450, y: 470 },
-            { x: 700, y: 480 },
-            { x: 750, y: 480 },
-            { x: 1000, y: 430 },
-            { x: 1050, y: 430 },
-            { x: 1200, y: 450 },
-            { x: 1250, y: 450 },
+            // Scattered clouds
+            { x: 400, y: 500 },
+            { x: 600, y: 400 },
+            { x: 550, y: 200 },
+            { x: 1100, y: 500},
 
-            // Single clouds high up
-            { x: 500, y: 300 },
-            { x: 800, y: 280 },
-            { x: 1100, y: 250 },
-            { x: 600, y: 200 },
-            { x: 900, y: 350 },
-            { x: 1300, y: 200 }
+            // Another group of clouds
+            { x: 800, y: 300 },
+            { x: 850, y: 300 },
+            { x: 900, y: 300 },
+
+            // Scattered higher clouds
+            { x: 1000, y: 300 },
+            { x: 1200, y: 200 }
         ];
     }
 
     create() {
-        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level5_background').setAlpha(0.2);
+        this.background = this.add.tileSprite(0, -200, 1250, 1250, 'level5_background').setAlpha(0.5);
         this.background.setOrigin(0, 0);
 
         this.map = this.make.tilemap({ key: 'level5_tilemap' });
@@ -65,8 +54,7 @@ export class Level5 extends BaseLevel {
 
         this.groundLayer = groundLayer;
         
-        this.groundLayer.setCollisionBetween(5,5)
-
+        this.groundLayer.setCollisionBetween(0,20)
 
         this.ingredients = this.physics.add.group();
         
@@ -84,9 +72,9 @@ export class Level5 extends BaseLevel {
         this.ingredients = this.physics.add.group();
         // Create ingredients at specific positions with bounce enabled
         const ingredientPositions = [
-            { x: 300, y: 300, key: 'lime' },
-            { x: 700, y: 100, key: 'sunglasses' },
-            { x: 1200, y: 400, key: 'salt' }
+            { x: 300, y: 200, key: 'pumpkin' },
+            { x: 700, y: 100, key: 'vanilla' },
+            { x: 1200, y: 400, key: 'cinnamon' }
         ];
 
         ingredientPositions.forEach((pos) => {
@@ -106,9 +94,9 @@ export class Level5 extends BaseLevel {
         });
 
         const ingredientIcons = [
-            { key: 'lime', x: 260, y: 175 },
-            { key: 'sunglasses', x: 325, y: 175 },
-            { key: 'salt', x: 390, y: 175 }
+            { key: 'pumpkin', x: 260, y: 175 },
+            { key: 'vanilla', x: 325, y: 175 },
+            { key: 'cinnamon', x: 390, y: 175 }
         ];
 
         ingredientIcons.forEach((icon) => {
@@ -126,20 +114,11 @@ export class Level5 extends BaseLevel {
 
         this.setupPlayerCollision()
 
-        this.physics.add.overlap(this.player, this.groundLayer, (player, tile) => {
-            if (tile instanceof Phaser.Tilemaps.Tile && (tile.index === 4 || tile.index === 6)) {
-                this.reduceHearts();
-                if (player instanceof Phaser.Physics.Arcade.Sprite) {
-                    player.setPosition(500, 450)
-                }   
-            }
-        });
-
         this.setupControls()
         this.clouds = this.physics.add.group();
 
         this.cloudCoords.forEach((coord) => {
-            const cloud = this.clouds.create(coord.x, coord.y, 'cloud');
+            const cloud = this.clouds.create(coord.x, coord.y, 'darkcloud');
             cloud.body.setAllowGravity(false); // Disable gravity for clouds
             cloud.setImmovable(true); // Make clouds immovable
 
@@ -150,7 +129,33 @@ export class Level5 extends BaseLevel {
         });
 
         // Enable collision between the player and the clouds
-        this.physics.add.collider(this.player, this.clouds, () => {
+        this.physics.add.collider(this.player, this.clouds, (player, cloud) => {
+            if (cloud instanceof Phaser.Physics.Arcade.Sprite) {
+                // Make the cloud slowly disappear
+                this.tweens.add({
+                    targets: cloud,
+                    alpha: 0, // Fully transparent
+                    duration: 1100, // Duration of fade-out
+                    onComplete: () => {
+                        // Disable collision when the cloud disappears
+                        cloud.body.checkCollision.none = true;
+
+                        // Reappear the cloud after a delay
+                        this.time.delayedCall(2000, () => {
+                            this.tweens.add({
+                                targets: cloud,
+                                alpha: 1, // Fully visible
+                                duration: 300, // Duration of fade-in
+                                onComplete: () => {
+                                    // Re-enable collision when the cloud reappears
+                                    cloud.body.checkCollision.none = false;
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+
             if (this.player?.body?.blocked.down) {
                 this.canJump = true; // Allow the player to jump again after landing on a cloud
             }
@@ -172,20 +177,60 @@ export class Level5 extends BaseLevel {
         // Render the gathered ingredients UI last to ensure it's on top
         this.renderGatheredIngredients()
 
-        this.emitSceneReady()
+    // Create a group for scarecrows
+    this.scarecrows = this.physics.add.group();
+
+    const scarecrowPositions = [
+        { x: 100, y: 300 },
+        { x: 600, y: 200 },
+        { x: 900, y: 400 },
+        { x: 500, y: 600 }
+    ];
+
+    scarecrowPositions.forEach((pos) => {
+        const scarecrow = this.scarecrows.create(pos.x, pos.y, 'scarecrow');
+        scarecrow.setCollideWorldBounds(true);
+        scarecrow.setImmovable(true);
+        scarecrow.body.setAllowGravity(false);
+
+        // Horizontal float tween (left to right)
+        this.tweens.add({
+            targets: scarecrow,
+            x: pos.x + 200,
+            duration: 2000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+
+        // Optional vertical bounce
+        this.tweens.add({
+            targets: scarecrow,
+            y: pos.y + 20,
+            duration: 200,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+    });
+
+    this.physics.add.collider(this.player, this.scarecrows, () => {
+        this.player?.setPosition(100, 450);
+        this.reduceHearts(); 
+    });
+
+
+
+    this.map.setTileIndexCallback(12, () => {
+        this.player?.setPosition(100, 450);
+        this.reduceHearts();
+    }, this, this.groundLayer);
+
+    this.emitSceneReady()
     }
 
     update() {
         this.handlePlayerMovement();
-
-        this.clouds.getChildren().forEach((cloud) => {
-            if (cloud instanceof Phaser.Physics.Arcade.Sprite) {
-                cloud.x -= 0.5; // Move clouds to the left slowly
-                if (cloud.x < -100) {
-                    cloud.x = 1350; // Reset cloud position when it moves out of view
-                }
-            }
-        });
     }
 
 }
