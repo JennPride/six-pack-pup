@@ -6,6 +6,7 @@ export class Level4 extends BaseLevel {
     map: Phaser.Tilemaps.Tilemap;
     clouds: Phaser.Physics.Arcade.Group;
     cloudCoords: { x: number, y: number }[];
+    staticCloud: Phaser.Physics.Arcade.Sprite | null;
 
     constructor() {
         super('Level4');
@@ -45,6 +46,7 @@ export class Level4 extends BaseLevel {
             { x: 900, y: 350 },
             { x: 1300, y: 200 }
         ];
+        this.staticCloud = null;
     }
 
     create() {
@@ -129,6 +131,20 @@ export class Level4 extends BaseLevel {
             }
         });
 
+        // Add a static cloud at the bottom of the screen
+        this.staticCloud = this.physics.add.sprite(100, 670, 'cloud'); 
+        if (this.staticCloud?.body instanceof Phaser.Physics.Arcade.Body) {
+            this.staticCloud.body.setAllowGravity(false); // Disable gravity for the static cloud
+            this.staticCloud.setImmovable(true); // Make the static cloud immovable
+        }
+
+        // Enable collision between the player and the static cloud
+        this.physics.add.collider(this.player, this.staticCloud, () => {
+            if (this.player?.body?.blocked.down) {
+                this.canJump = true; // Allow the player to jump again after landing on the static cloud
+            }
+        });
+
         // Update ingredients count when collecting items
         this.physics.add.overlap(
             this.player,
@@ -159,6 +175,7 @@ export class Level4 extends BaseLevel {
                 }
             }
         });
+
 
         // Check if the player falls below the screen
         if (this.player && this.player.y > this.physics.world.bounds.height) {

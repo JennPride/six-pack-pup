@@ -66,6 +66,7 @@ export class Preloader extends Scene
         // Load enemies
         this.load.image('bee1', 'enemies/bee1.png');
         this.load.image('bee2', 'enemies/bee2.png');
+        this.load.image('fallingstar', 'enemies/fallingstar.png');
 
         // Load Moon sprites and animations
         this.load.image('moon1', 'moon/moon1.png');
