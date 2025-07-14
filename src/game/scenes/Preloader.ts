@@ -44,6 +44,8 @@ export class Preloader extends Scene
         this.load.tilemapTiledJSON('level5_tilemap', 'maps/level5map.json');
         this.load.tilemapTiledJSON('level6_tilemap', 'maps/level6map.json');
 
+        this.load.image('cloud', 'backgrounds/cloud.png');
+
         // Load spritesheet
         this.load.image('spritesheet', 'maps/art_of_troegs_spritesheet.png')
 
@@ -54,6 +56,12 @@ export class Preloader extends Scene
         this.load.image('magnifyingglass', 'ingredients/level2/magnifyingglass.png');
         this.load.image('melon', 'ingredients/level2/melon.png');
         this.load.image('pear', 'ingredients/level2/pear.png');
+        this.load.image('lime', 'ingredients/level3/lime.png');
+        this.load.image('sunglasses', 'ingredients/level3/sunglasses.png');
+        this.load.image('salt', 'ingredients/level3/salt.png');
+        this.load.image('star', 'ingredients/level4/star.png');
+        this.load.image('pineapple', 'ingredients/level4/pineapple.png');
+        this.load.image('grapefruit', 'ingredients/level4/grapefruit.png');
 
         // Load enemies
         this.load.image('bee1', 'enemies/bee1.png');
@@ -76,6 +84,6 @@ export class Preloader extends Scene
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         // this.scene.start('MainMenu');
-        this.scene.start('Level3');
+        this.scene.start('Level4');
     }
 }
