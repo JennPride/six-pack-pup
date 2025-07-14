@@ -130,16 +130,16 @@ export class Level6 extends BaseLevel {
         // Remove stars once they are out of view
         this.physics.world.on('worldbounds', (body: Phaser.Physics.Arcade.Body) => {
             if (fallingStars.contains(body.gameObject)) {
-                body.gameObject.destroy(); // Remove the star from the scene
+                body.gameObject.destroy(); 
             }
         });
 
         // Enable collision between the player and falling stars
         this.physics.add.overlap(this.player, fallingStars, (_, star) => {
             if (star instanceof Phaser.Physics.Arcade.Sprite) {
-                star.destroy(); // Remove the star from the scene
+                star.destroy(); 
             }
-            this.reduceHearts(); // Reduce hearts if the player is hit by a star
+            this.reduceHearts();
         });
 
         this.renderLives()

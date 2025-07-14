@@ -87,6 +87,13 @@ export class Preloader extends Scene
         this.load.image('moon7', 'moon/moon7.png');
         this.load.image('fullheart', 'moon/fullheart.png');
         this.load.image('emptyheart', 'moon/emptyheart.png');
+
+        this.load.image('level1can', 'levels/leafseeker.png')
+        this.load.image('level2can', 'levels/fieldstudy.png');
+        this.load.image('level3can', 'levels/sunshine.png');
+        this.load.image('level4can', 'levels/hazecharmer.png');
+        this.load.image('level5can', 'levels/masterofpumpkins.png');
+        this.load.image('level6can', 'levels/madelf.png');
     }
 
     create ()
@@ -95,7 +102,7 @@ export class Preloader extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        // this.scene.start('MainMenu');
-        this.scene.start('Level6');
+        this.scene.start('MainMenu');
+        // this.scene.start('Level6');
     }
 }

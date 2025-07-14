@@ -6,9 +6,11 @@ export abstract class BaseLevel extends Phaser.Scene {
     protected canJump: boolean;
     protected groundLayer: Phaser.Tilemaps.TilemapLayer;
     protected hearts: number;
+    protected ingredients: Phaser.Physics.Arcade.Group;
     protected gatheredIngredients: string[]
     protected ingredientPlaceholders: { [key: string]: Phaser.GameObjects.Sprite }
-    protected canGetHurt: boolean = true;
+    protected canGetHurt: boolean;
+    protected transitioningLevel: boolean;
 
     constructor(sceneKey: string) {
         super(sceneKey);
@@ -18,6 +20,8 @@ export abstract class BaseLevel extends Phaser.Scene {
         this.hearts = 3;
         this.gatheredIngredients = [];
         this.ingredientPlaceholders = {};
+        this.canGetHurt = true;
+        this.transitioningLevel = false
     }
 
     protected renderLives() {
@@ -150,5 +154,103 @@ export abstract class BaseLevel extends Phaser.Scene {
 
     protected emitSceneReady() {
         EventBus.emit('current-scene-ready', this);
+    }
+
+    protected successNextScene(
+        nextSceen: string,
+        imgLabel: string,
+    ) {
+        if (this.transitioningLevel) return;
+        this.transitioningLevel = true;
+        const centerX = this.cameras.main.centerX;
+        const centerY = this.cameras.main.centerY;
+        const can = this.add.image(centerX, -500, imgLabel).setOrigin(0.5, 0.5);
+        can.setScrollFactor(0); // Ensure the image doesn't scroll with the camera 
+        can.setScale(.7)
+
+        // Bounce it up into view
+        this.tweens.add({
+            targets: can,
+            y: centerY, // Final y position on screen
+            ease: 'Bounce.easeOut', // Makes it bounce
+            duration: 3000, // Time in ms
+            delay: 200, // Optional: small delay before animation starts
+        });
+
+        this.time.delayedCall(5000, () => {
+            can.destroy(); // Remove the image after the animation
+            this.transitioningLevel = false;
+            this.scene.start(nextSceen);
+        });
+    }
+
+    protected setupLevel(
+        startingLocation: { x: number, y: number } = { x: 100, y: 600 },
+        ingredients: {
+            [key: string]: { x: number, y: number }
+        },
+        gravityForIngredients: boolean = false
+    ) {
+        this.groundLayer.setCollisionBetween(0,20)
+        this.player = this.physics.add.sprite(startingLocation.x, startingLocation.y, 'moon1');
+        this.player.setScale(1.3);
+
+        this.ingredients = this.physics.add.group();
+        for (const [key, pos] of Object.entries(ingredients)) {
+            const ingredient = this.ingredients.create(pos.x, pos.y, key);
+            ingredient.body.setAllowGravity(gravityForIngredients);
+            if (!gravityForIngredients) {
+                this.tweens.add({
+                    targets: ingredient,
+                    y: pos.y - 20, // Move up by 20 pixels
+                    duration: 1000, // Duration of the tween
+                    yoyo: true, // Reverse the tween to move back down
+                    repeat: -1 // Repeat indefinitely
+                });
+            } else {
+                this.physics.add.collider(this.ingredients, this.groundLayer);
+            }
+        }
+        
+        const ingredientKeys = Object.keys(ingredients);
+
+        const ingredientIcons = [
+            { key: ingredientKeys[0], x: 260, y: 175 },
+            { key: ingredientKeys[1], x: 325, y: 175 },
+            { key: ingredientKeys[2], x: 390, y: 175 }
+        ];
+
+        ingredientIcons.forEach((icon) => {
+            // Create blacked out version (placeholder)
+            const placeholder = this.add.sprite(icon.x, icon.y, icon.key);
+            placeholder.setTint(0x000000);
+            placeholder.setScrollFactor(0);
+            placeholder.setDepth(999);
+            
+            if (!this.ingredientPlaceholders) {
+                this.ingredientPlaceholders = {};
+            }
+            this.ingredientPlaceholders[icon.key] = placeholder;
+        });
+
+        this.physics.add.overlap(
+            this.player,
+            this.ingredients,
+            (_, obj2) => {
+                if (obj2 instanceof Phaser.Physics.Arcade.Sprite) {
+                    obj2.disableBody(true, true);
+                    this.gatheredIngredients.push(obj2.texture.key);
+                    this.ingredientPlaceholders[obj2.texture.key].setTint(0xffffff)
+                }
+            }
+        );
+
+        this.setupCamera()
+        this.setupPlayerCollision();
+        this.setupPlayerAnimation();
+        this.setupControls()
+        this.renderGatheredIngredients()
+        this.renderLives()
+
     }
 } 
