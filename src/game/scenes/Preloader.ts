@@ -78,13 +78,22 @@ export class Preloader extends Scene
         this.load.image('madelf', 'enemies/madelf.png');
 
         // Load Moon sprites and animations
-        this.load.image('moon1', 'moon/moon1.png');
-        this.load.image('moon2', 'moon/moon2.png');
-        this.load.image('moon3', 'moon/moon3.png');
-        this.load.image('moon4', 'moon/moon4.png');
-        this.load.image('moon5', 'moon/moon5.png');
-        this.load.image('moon6', 'moon/moon6.png');
-        this.load.image('moon7', 'moon/moon7.png');
+        // this.load.image('moon1', 'moon/moon1.png');
+        // this.load.image('moon2', 'moon/moon2.png');
+        // this.load.image('moon3', 'moon/moon3.png');
+        // this.load.image('moon4', 'moon/moon4.png');
+        // this.load.image('moon5', 'moon/moon5.png');
+        // this.load.image('moon6', 'moon/moon6.png');
+        // this.load.image('moon7', 'moon/moon7.png');
+        this.load.image('moon1', 'moon/moonwalk1.png');
+        this.load.image('moon2', 'moon/moonwalk2.png');
+        this.load.image('moon3', 'moon/moonwalk3.png');
+        this.load.image('moon4', 'moon/moonwalk4.png');
+        this.load.image('moon5', 'moon/moonwalk5.png');
+        this.load.image('moon6', 'moon/moonwalk6.png');
+        this.load.image('moon7', 'moon/moonwalk7.png');
+        this.load.image('moonwag', 'moon/moonwag.png');
+        this.load.image('moonwag2', 'moon/moonwag2.png');
         this.load.image('fullheart', 'moon/fullheart.png');
         this.load.image('emptyheart', 'moon/emptyheart.png');
 
@@ -98,10 +107,6 @@ export class Preloader extends Scene
 
     create ()
     {
-        //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-        //  For example, you can define global animations here, so we can use them in other scenes.
-
-        //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Level5');
+        this.scene.start('MainMenu');
     }
 }

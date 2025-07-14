@@ -82,9 +82,21 @@ export abstract class BaseLevel extends Phaser.Scene {
                 { key: 'moon6' },
                 { key: 'moon7' }
             ],
-            frameRate: 10,
+            frameRate: 15,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'moon_wait',
+            frames: [
+                { key: 'moon1' },
+                { key: 'moonwag'},
+                { key: 'moonwag2'},
+                { key: 'moonwag'}
+            ],
+            frameRate: 10,
+            repeat: -1
+        })
     }
 
     protected handlePlayerMovement(slippery=false) {
@@ -107,15 +119,19 @@ export abstract class BaseLevel extends Phaser.Scene {
             if (!slippery) {
                 this.player.setVelocityX(0);
             }
-            this.player.setTexture('moon1');
-            this.player.anims.stop();
+            if (this.canJump) {
+                this.player.play('moon_wait', true);
+            } else {
+                this.player.setTexture('moon1'); // Set to idle texture when not moving
+                this.player.anims.stop();
+            }
         }
 
         // Handle jumping
         if (this.cursors.up.isDown && this.canJump) {
             this.canJump = false;
             this.player.setVelocityY(-500);
-            this.player.setTexture('moon6');
+            this.player.setTexture('moon4');
             this.player.anims.stop();
             
         }
@@ -212,7 +228,6 @@ export abstract class BaseLevel extends Phaser.Scene {
         }
 
         this.player = this.physics.add.sprite(startingLocation.x, startingLocation.y, 'moon1');
-        this.player.setScale(1.3);
 
         this.ingredients = this.physics.add.group();
         for (const [key, pos] of Object.entries(ingredients)) {
