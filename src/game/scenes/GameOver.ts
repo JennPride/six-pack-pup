@@ -35,6 +35,7 @@ export class GameOver extends Scene
         enterKey?.on('down', () => {
             this.changeScene();
         });
+
         
         EventBus.emit('current-scene-ready', this);
     }
