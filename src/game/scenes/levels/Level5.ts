@@ -112,9 +112,8 @@ export class Level5 extends BaseLevel {
 
     const scarecrowPositions = [
         { x: 100, y: 300 },
-        { x: 500, y: 200 },
+        { x: 400, y: 200 },
         { x: 900, y: 400 },
-        { x: 400, y: 600 }
     ];
 
     scarecrowPositions.forEach((pos) => {
@@ -161,7 +160,7 @@ export class Level5 extends BaseLevel {
 
     update() {
         this.handlePlayerMovement();
-        if (this.gatheredIngredients.length === 0) {
+        if (this.gatheredIngredients.length === 3) {
             this.successNextScene('Level5', 'Level6', 'level5can');
         }
     }

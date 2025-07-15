@@ -54,6 +54,7 @@ export abstract class BaseLevel extends Phaser.Scene {
 
     protected renderGatheredIngredients() {
         const backgroundRect = this.add.rectangle(325, 175, 200, 75, 0xffffff, 1.0).setAlpha(0.5)
+        backgroundRect.setDepth(900);
         backgroundRect.setScrollFactor(0);
         backgroundRect.setRounded(5);
         backgroundRect.setStrokeStyle(2, 0x000000);

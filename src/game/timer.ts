@@ -5,43 +5,41 @@ export class Timer {
     private running: boolean = false;
   
     start() {
-        this.reset(); // Ensure a clean start
-        this.startTime = performance.now();
-        this.running = true;
-      }
-
-    pause() {
-        if (this.running) {
-            this.elapsed += performance.now() - this.startTime;
-            this.running = false;
-        }
-    }
-
-    play() {
-        if (!this.running) {
-            this.startTime = performance.now() - this.elapsed;
-            this.running = true;
-        }
+      this.reset();
+      this.startTime = performance.now();
+      this.running = true;
     }
   
-    stop() {
+    pause() {
       if (this.running) {
-        this.elapsed = performance.now() - this.startTime;
+        this.elapsed += performance.now() - this.startTime;
         this.running = false;
       }
     }
   
+    play() {
+      if (!this.running) {
+        this.startTime = performance.now();
+        this.running = true;
+      }
+    }
+  
+    stop() {
+      this.pause(); // same behavior as pause
+    }
+  
     reset() {
-      this.startTime = 0;
       this.elapsed = 0;
+      this.startTime = 0;
       this.running = false;
     }
   
     getTime(): number {
       if (this.running) {
-        return performance.now() - this.startTime;
+        return this.elapsed + (performance.now() - this.startTime);
+      } else {
+        return this.elapsed;
       }
-      return this.elapsed;
     }
   
     getFormatted(): string {
