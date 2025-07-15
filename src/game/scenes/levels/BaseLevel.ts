@@ -80,8 +80,40 @@ export abstract class BaseLevel extends Phaser.Scene {
             })
         }
         if (this.hearts === 0) {
-            this.scene.stop(this.scene.key);
-            this.scene.start('GameOver');
+            speedrunTimer.pause();
+            this.canGetHurt = false;
+            this.transitioningLevel = true;
+            const cam = this.cameras.main;
+        
+            const dimBg = this.add.rectangle(0, 0, cam.width, cam.height, 0x000000, 0.7)
+            .setOrigin(0)
+            .setScrollFactor(0)
+            .setDepth(0);
+    
+            dimBg.setAlpha(0);
+            this.tweens.add({
+                targets: dimBg,
+                alpha: 0.5,
+                duration: 300,
+                ease: 'Linear'
+            });
+            const centerX = cam.centerX;
+            this.add.text(centerX, cam.centerY, 'Game Over', {
+                fontFamily: 'VT323',
+                fontSize: '100px',
+                color: '#ffffff',
+                align: 'center'
+            }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
+            this.add.text(centerX, cam.centerY + 100, 'Press Enter to Restart', {
+                fontFamily: 'VT323',
+                fontSize: '50px',
+                color: '#ffffff',
+                align: 'center'
+            }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
+            const enterKey = this.input.keyboard?.addKey('ENTER');
+            enterKey?.on('down', () => {
+                this.scene.restart();
+            })
         }
     }
 
@@ -188,7 +220,6 @@ export abstract class BaseLevel extends Phaser.Scene {
 
     protected emitSceneReady() {
         EventBus.emit('current-scene-ready', this);
-        speedrunTimer.play();
     }
 
     protected successNextScene(
@@ -314,6 +345,7 @@ export abstract class BaseLevel extends Phaser.Scene {
         this.renderGatheredIngredients()
         this.renderLives()
         this.renderTimer()
+        speedrunTimer.play();
     }
 
     protected handleOffScreenFall() {

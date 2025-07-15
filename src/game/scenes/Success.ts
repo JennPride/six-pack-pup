@@ -83,6 +83,7 @@ export class Success extends Phaser.Scene {
         }).setOrigin(0.5).setInteractive();
 
         menuButton.on('pointerdown', () => {
+            speedrunTimer.reset()
             this.scene.start('MainMenu');
         });
 
