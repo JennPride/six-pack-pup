@@ -1,4 +1,5 @@
 import { BaseLevel } from './BaseLevel';
+import { speedrunTimer } from '../../timer';
 
 export class Level6 extends BaseLevel {
     background: Phaser.GameObjects.TileSprite;
@@ -129,7 +130,8 @@ export class Level6 extends BaseLevel {
         }
 
         if (this.gatheredIngredients.length === 3) {
-            this.successNextScene('Success', 'level6can');
+            speedrunTimer.stop();
+            this.successNextScene('Level6', 'Success', 'level6can');
         }
     }
 

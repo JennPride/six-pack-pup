@@ -49,7 +49,11 @@ export class Level1 extends BaseLevel {
         this.handlePlayerMovement()
 
         if (this.gatheredIngredients.length === 3) {
-            this.successNextScene('Level2', 'level1can');
+            this.successNextScene(
+                'Level1',
+                'Level2', 
+                'level1can'
+            );
         }
     }
 } 

@@ -55,7 +55,8 @@ export class Level4 extends BaseLevel {
                 'pineapple': { x: 600, y: 320 },
                 'grapefruit': { x: 1100, y: 100 }
             },
-            false // Disable gravity for ingredients
+            false, // Disable gravity for ingredients
+            false,
         )
 
         this.clouds = this.physics.add.group();
@@ -144,7 +145,7 @@ export class Level4 extends BaseLevel {
         this.handleOffScreenFall()
 
         if (this.gatheredIngredients.length === 3) {
-            this.successNextScene('Level5', 'level4can');
+            this.successNextScene('Level4', 'Level5', 'level4can');
         }
 
     }

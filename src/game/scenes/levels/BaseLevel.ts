@@ -1,4 +1,5 @@
 import { EventBus } from '../../EventBus';
+import { speedrunTimer } from '../../timer';
 
 export abstract class BaseLevel extends Phaser.Scene {
     protected player: Phaser.Physics.Arcade.Sprite;
@@ -6,6 +7,7 @@ export abstract class BaseLevel extends Phaser.Scene {
     protected canJump: boolean;
     protected groundLayer: Phaser.Tilemaps.TilemapLayer;
     protected hearts: number;
+    protected timerText: Phaser.GameObjects.Text;
     protected ingredients: Phaser.Physics.Arcade.Group;
     protected gatheredIngredients: string[]
     protected ingredientPlaceholders: { [key: string]: Phaser.GameObjects.Sprite }
@@ -38,6 +40,18 @@ export abstract class BaseLevel extends Phaser.Scene {
         }
     }
 
+    protected renderTimer() {
+        this.timerText = this.add.text(1000, 620, '', {
+            fontFamily: 'VT323',
+            fontSize: '32px',
+            color: '#DDD'
+          }).setOrigin(0.5).setScrollFactor(0);
+          // Update every frame
+          this.events.on('update', () => {
+            this.timerText.setText(speedrunTimer.getFormatted());
+          });
+    }
+
     protected renderGatheredIngredients() {
         const backgroundRect = this.add.rectangle(325, 175, 200, 75, 0xffffff, 1.0).setAlpha(0.5)
         backgroundRect.setScrollFactor(0);
@@ -47,7 +61,7 @@ export abstract class BaseLevel extends Phaser.Scene {
     }
 
     protected reduceHearts() {
-        if (!this.canGetHurt) return;
+        if (!this.canGetHurt || this.transitioningLevel) return;
         if (this.hearts > 0) {
             this.canGetHurt = false;
             this.time.delayedCall(100, () => {
@@ -66,6 +80,7 @@ export abstract class BaseLevel extends Phaser.Scene {
             })
         }
         if (this.hearts === 0) {
+            this.scene.stop(this.scene.key);
             this.scene.start('GameOver');
         }
     }
@@ -131,7 +146,7 @@ export abstract class BaseLevel extends Phaser.Scene {
         if (this.cursors.up.isDown && this.canJump) {
             this.canJump = false;
             this.player.setVelocityY(-500);
-            this.player.setTexture('moon4');
+            this.player.setTexture('moon6');
             this.player.anims.stop();
             
         }
@@ -169,14 +184,17 @@ export abstract class BaseLevel extends Phaser.Scene {
 
     protected emitSceneReady() {
         EventBus.emit('current-scene-ready', this);
+        speedrunTimer.play();
     }
 
     protected successNextScene(
-        nextSceen: string,
+        currScene: string,
+        nextScene: string,
         imgLabel: string,
     ) {
         if (this.transitioningLevel) return;
         this.transitioningLevel = true;
+        speedrunTimer.pause();
 
         const cam = this.cameras.main;
         
@@ -211,7 +229,8 @@ export abstract class BaseLevel extends Phaser.Scene {
         this.time.delayedCall(5000, () => {
             can.destroy(); // Remove the image after the animation
             this.transitioningLevel = false;
-            this.scene.start(nextSceen);
+            this.scene.stop(currScene); 
+            this.scene.start(nextScene);
         });
     }
 
@@ -223,6 +242,11 @@ export abstract class BaseLevel extends Phaser.Scene {
         gravityForIngredients: boolean = false,
         setCollision: boolean = true,
     ) {
+        this.hearts = 3;
+        this.gatheredIngredients = [];
+        this.transitioningLevel = false;
+        this.canGetHurt = true;
+
         if (setCollision && this.groundLayer) {
             this.groundLayer.setCollisionBetween(0,20)
         }
@@ -285,7 +309,7 @@ export abstract class BaseLevel extends Phaser.Scene {
         this.setupControls()
         this.renderGatheredIngredients()
         this.renderLives()
-
+        this.renderTimer()
     }
 
     protected handleOffScreenFall() {

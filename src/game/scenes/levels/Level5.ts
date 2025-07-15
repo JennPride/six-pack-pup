@@ -37,7 +37,7 @@ export class Level5 extends BaseLevel {
         this.background.setOrigin(0, 0);
 
         this.map = this.make.tilemap({ key: 'level5_tilemap' });
-        
+
         const levelTileset = this.map.addTilesetImage('spritemap', 'spritesheet');
 
         if (!levelTileset) {
@@ -162,7 +162,7 @@ export class Level5 extends BaseLevel {
     update() {
         this.handlePlayerMovement();
         if (this.gatheredIngredients.length === 0) {
-            this.successNextScene('Level6', 'level5can');
+            this.successNextScene('Level5', 'Level6', 'level5can');
         }
     }
 

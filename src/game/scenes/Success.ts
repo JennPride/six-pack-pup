@@ -1,4 +1,5 @@
 import { EventBus } from '../EventBus';
+import { speedrunTimer } from '../timer';
 
 export class Success extends Phaser.Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
@@ -49,8 +50,32 @@ export class Success extends Phaser.Scene {
             align: 'center'
         }).setOrigin(0.5);
 
+        this.add.text(centerX, 550, 
+            "Time: " + speedrunTimer.getFormatted(), 
+            {
+            fontFamily: 'VT323',
+            fontSize: '50px',
+            color: '#fff',
+            align: 'center'
+        }).setOrigin(0.5);
+
+        this.anims.create({
+            key: 'moon_happy',
+            frames: [
+                { key: 'moonhappy1' },
+                { key: 'moonhappy' },
+                { key: 'moonhappy1' },
+                { key: 'moonhappy2' },
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+
+        const moon = this.add.sprite(100, 600, 'moonhappy1').setOrigin(0.5).setScale(3)
+        moon.play('moon_happy');
         // Add a button to return to main menu
-        const menuButton = this.add.text(centerX, 600, 'Return to Main Menu', {
+        const menuButton = this.add.text(centerX, 670, 'Return to Main Menu', {
             fontFamily: 'VT323',
             fontSize: '40px',
             color: '#fff',

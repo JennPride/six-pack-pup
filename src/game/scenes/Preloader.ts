@@ -85,17 +85,21 @@ export class Preloader extends Scene
         // this.load.image('moon5', 'moon/moon5.png');
         // this.load.image('moon6', 'moon/moon6.png');
         // this.load.image('moon7', 'moon/moon7.png');
-        this.load.image('moon1', 'moon/moonwalk1.png');
+        this.load.image('moon1', 'moon/moonidle1.png');
         this.load.image('moon2', 'moon/moonwalk2.png');
         this.load.image('moon3', 'moon/moonwalk3.png');
         this.load.image('moon4', 'moon/moonwalk4.png');
         this.load.image('moon5', 'moon/moonwalk5.png');
         this.load.image('moon6', 'moon/moonwalk6.png');
         this.load.image('moon7', 'moon/moonwalk7.png');
-        this.load.image('moonwag', 'moon/moonwag.png');
-        this.load.image('moonwag2', 'moon/moonwag2.png');
+        this.load.image('moonwag1', 'moon/moonidle2.png');
+        this.load.image('moonwag2', 'moon/moonidle3.png');
         this.load.image('fullheart', 'moon/fullheart.png');
         this.load.image('emptyheart', 'moon/emptyheart.png');
+
+        this.load.image('moonhappy', 'moon/moonhappy.png');
+        this.load.image('moonhappy1', 'moon/moonhappy1.png');
+        this.load.image('moonhappy2', 'moon/moonhappy2.png');
 
         this.load.image('level1can', 'levels/leafseeker.png')
         this.load.image('level2can', 'levels/fieldstudy.png');
@@ -103,6 +107,8 @@ export class Preloader extends Scene
         this.load.image('level4can', 'levels/hazecharmer.png');
         this.load.image('level5can', 'levels/pumpkins.png');
         this.load.image('level6can', 'levels/madelf.png');
+
+
     }
 
     create ()

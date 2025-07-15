@@ -127,7 +127,7 @@ export class Level2 extends BaseLevel {
         });
 
         if (this.gatheredIngredients.length === 3) {
-            this.successNextScene('Level3', 'level2can');
+            this.successNextScene('Level2','Level3', 'level2can');
         }
     }
 
