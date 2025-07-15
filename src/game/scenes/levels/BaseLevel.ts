@@ -117,28 +117,32 @@ export abstract class BaseLevel extends Phaser.Scene {
     protected handlePlayerMovement(slippery=false) {
         if (!this.player || !this.cursors) return;
 
-        // Handle movement left right
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-200);
-            this.player.setFlipX(true);
-            if (this.canJump) {
-                this.player.play('moon_walk', true);
-            }
-        } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(200);
-            this.player.setFlipX(false);
-            if (this.canJump) {
-                this.player.play('moon_walk', true);
-            }
-        } else {
-            if (!slippery) {
-                this.player.setVelocityX(0);
-            }
-            if (this.canJump) {
-                this.player.play('moon_wait', true);
+        const halfWidth = this.player.displayWidth / 2;
+
+{
+            // Handle movement left right
+            if (this.cursors.left.isDown && this.player.x - halfWidth >= 0) {
+                this.player.setVelocityX(-200);
+                this.player.setFlipX(true);
+                if (this.canJump) {
+                    this.player.play('moon_walk', true);
+                }
+            } else if (this.cursors.right.isDown && this.player.x + halfWidth <= this.physics.world.bounds.width) {
+                this.player.setVelocityX(200);
+                this.player.setFlipX(false);
+                if (this.canJump) {
+                    this.player.play('moon_walk', true);
+                }
             } else {
-                this.player.setTexture('moon1'); // Set to idle texture when not moving
-                this.player.anims.stop();
+                if (!slippery) {
+                    this.player.setVelocityX(0);
+                }
+                if (this.canJump) {
+                    this.player.play('moon_wait', true);
+                } else {
+                    this.player.setTexture('moon1'); // Set to idle texture when not moving
+                    this.player.anims.stop();
+                }
             }
         }
 
