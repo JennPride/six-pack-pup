@@ -113,6 +113,6 @@ export class Preloader extends Scene
 
     create ()
     {
-        this.scene.start('Level5');
+        this.scene.start('MainMenu');
     }
 }

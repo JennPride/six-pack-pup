@@ -72,7 +72,7 @@ export class Success extends Phaser.Scene {
         });
 
 
-        const moon = this.add.sprite(100, 600, 'moonhappy1').setOrigin(0.5).setScale(3)
+        const moon = this.add.sprite(170, 600, 'moonhappy1').setOrigin(0.5).setScale(3)
         moon.play('moon_happy');
         // Add a button to return to main menu
         const menuButton = this.add.text(centerX, 670, 'Return to Main Menu', {
